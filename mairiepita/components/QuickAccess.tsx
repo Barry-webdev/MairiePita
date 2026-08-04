@@ -53,10 +53,7 @@ const items = [
 
 export default function QuickAccess() {
   return (
-    <section
-      className="relative z-10 max-w-7xl mx-auto px-4"
-      style={{ marginTop: '-30px' }}
-    >
+    <section className="relative z-10 max-w-7xl mx-auto px-4 -mt-6 sm:-mt-8 lg:-mt-10">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {items.map((item) => (
           <a

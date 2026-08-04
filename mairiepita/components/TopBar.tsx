@@ -2,16 +2,16 @@ export default function TopBar() {
   return (
     <div style={{ backgroundColor: "#1a5c2a" }} className="text-white text-xs py-2">
       <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-        {/* Left: contact info */}
-        <div className="flex flex-wrap items-center gap-4">
-          {/* Phone */}
+        {/* Left: contact info — masqué partiellement sur très petit écran */}
+        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 w-full sm:w-auto">
+          {/* Phone — toujours visible */}
           <a
             href="tel:+22412345679"
-            className="flex items-center gap-1 hover:text-yellow-300 transition-colors"
+            className="flex items-center gap-1 hover:text-yellow-300 transition-colors whitespace-nowrap"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3"
+              className="h-3 w-3 flex-shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -26,14 +26,14 @@ export default function TopBar() {
             +224 123 45 67 89
           </a>
 
-          {/* Email */}
+          {/* Email — masqué sur xs, visible à partir de md */}
           <a
             href="mailto:contact@mairiepita.gov.gn"
-            className="flex items-center gap-1 hover:text-yellow-300 transition-colors"
+            className="hidden md:flex items-center gap-1 hover:text-yellow-300 transition-colors whitespace-nowrap"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3"
+              className="h-3 w-3 flex-shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -48,11 +48,11 @@ export default function TopBar() {
             contact@mairiepita.gov.gn
           </a>
 
-          {/* Hours */}
-          <span className="flex items-center gap-1 text-white/80">
+          {/* Hours — masqué sur xs, visible à partir de sm */}
+          <span className="hidden sm:flex items-center gap-1 text-white/80 whitespace-nowrap">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3"
+              className="h-3 w-3 flex-shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -68,7 +68,7 @@ export default function TopBar() {
           </span>
         </div>
 
-        {/* Right: social icons */}
+        {/* Right: social icons + label "Suivez-nous" */}
         <div className="flex items-center gap-3">
           {/* Facebook */}
           <a

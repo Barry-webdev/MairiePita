@@ -12,7 +12,7 @@ export default function Home() {
       <TopBar />
       <Navbar />
       <Hero />
-      <div style={{ backgroundColor: '#f5f5f5', paddingTop: '48px', paddingBottom: '0' }}>
+      <div style={{ backgroundColor: '#f5f5f5', paddingBottom: '0' }}>
         <QuickAccess />
       </div>
       <MaireSection />
