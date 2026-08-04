@@ -1,0 +1,9 @@
+import AdminEvenementsDashboard from '@/components/admin/AdminEvenementsDashboard';
+
+export const metadata = {
+  title: 'Événements — Administration Mairie de Pita',
+};
+
+export default function AdminEvenementsPage() {
+  return <AdminEvenementsDashboard />;
+}
