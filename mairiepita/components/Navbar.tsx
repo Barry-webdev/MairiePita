@@ -8,7 +8,7 @@ const navLinks = [
     label: 'La Commune',
     href: '#',
     dropdown: [
-      { label: 'Présentation', href: '#' },
+      { label: 'Présentation', href: '/la-commune' },
       { label: 'Géographie', href: '#' },
       { label: 'Histoire', href: '#' },
       { label: "Mot du Maire", href: '#' },
@@ -23,12 +23,12 @@ const navLinks = [
       { label: 'Séances', href: '#' },
     ],
   },
-  { label: 'Actualités', href: '#' },
+  { label: 'Actualités', href: '/actualites' },
   {
     label: 'Services',
     href: '#',
     dropdown: [
-      { label: 'État civil', href: '#' },
+      { label: 'État civil', href: '/services/etat-civil' },
       { label: 'Urbanisme', href: '#' },
       { label: 'Recette communale', href: '#' },
       { label: 'Déchets et salubrité', href: '#' },
@@ -39,12 +39,12 @@ const navLinks = [
     label: 'Transparence',
     href: '#',
     dropdown: [
-      { label: 'Budget communal', href: '#' },
-      { label: 'Marchés publics', href: '#' },
-      { label: 'Rapports annuels', href: '#' },
+      { label: 'Budget communal', href: '/transparence/budget' },
+      { label: 'Marchés publics', href: '/appels-offres' },
+      { label: 'Rapports annuels', href: '/documents' },
     ],
   },
-  { label: 'Contact', href: '#' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export default function Navbar() {

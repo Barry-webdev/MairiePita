@@ -85,7 +85,7 @@ export default function Footer() {
               </a>
             </div>
             <a
-              href="#"
+              href="/contact"
               className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded text-white transition-all hover:brightness-110 w-fit"
               style={{ backgroundColor: '#1a5c2a' }}
             >
@@ -155,10 +155,10 @@ export default function Footer() {
                 </div>
                 <div>
                   <div className="font-black uppercase tracking-widest text-xs">Mairie de Pita</div>
-                  <div className="text-xs text-white/60 italic mt-0.5">Guinée</div>
+                  <div className="text-xs italic mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>Guinée</div>
                 </div>
               </div>
-              <p className="text-sm text-white/70 leading-relaxed">
+              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
                 La Mairie de Pita œuvre pour le bien-être des populations et le développement harmonieux de notre commune.
               </p>
               {/* Social icons */}
@@ -191,13 +191,19 @@ export default function Footer() {
                 Liens Rapides
               </h5>
               <ul className="flex flex-col gap-2">
-                {['Accueil', 'La Commune', 'Conseil Communal', 'Actualités', 'Contact'].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="text-sm text-white/70 hover:text-white flex items-center gap-1.5 transition-colors">
+                {[
+                  { label: 'Accueil', href: '/' },
+                  { label: 'La Commune', href: '/la-commune' },
+                  { label: 'Conseil Communal', href: '#' },
+                  { label: 'Actualités', href: '/actualites' },
+                  { label: 'Contact', href: '/contact' },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <a href={item.href} className="text-sm hover:text-white flex items-center gap-1.5 transition-colors" style={{ color: 'rgba(255,255,255,0.7)' }}>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                       </svg>
-                      {item}
+                      {item.label}
                     </a>
                   </li>
                 ))}
@@ -229,13 +235,19 @@ export default function Footer() {
                 Documents Utiles
               </h5>
               <ul className="flex flex-col gap-2">
-                {['Budget communal', 'Plans & Rapports', 'Délibérations', 'Règlements communaux', 'Formulaires'].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="text-sm text-white/70 hover:text-white flex items-center gap-1.5 transition-colors">
+                {[
+                  { label: 'Budget communal', href: '/documents' },
+                  { label: 'Plans & Rapports', href: '/documents' },
+                  { label: 'Délibérations', href: '/documents' },
+                  { label: 'Règlements communaux', href: '/documents' },
+                  { label: 'Formulaires', href: '/documents' },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <a href={item.href} className="text-sm hover:text-white flex items-center gap-1.5 transition-colors" style={{ color: 'rgba(255,255,255,0.7)' }}>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                       </svg>
-                      {item}
+                      {item.label}
                     </a>
                   </li>
                 ))}
@@ -281,15 +293,15 @@ export default function Footer() {
 
       {/* ===== VERY BOTTOM BAR ===== */}
       <div
-        className="px-4 py-4 text-xs text-white/60 border-t border-white/10"
-        style={{ backgroundColor: '#0d3a1a' }}
+        className="px-4 py-4 text-xs border-t border-white/10"
+        style={{ backgroundColor: '#0d3a1a', color: 'rgba(255,255,255,0.6)' }}
       >
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>© 2024 Mairie de Pita - Tous droits réservés</span>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-white transition-colors">Mentions légales</a>
-            <span className="text-white/30">|</span>
-            <a href="#" className="hover:text-white transition-colors">Politique de confidentialité</a>
+            <a href="#" className="hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.6)' }}>Mentions légales</a>
+            <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>
+            <a href="#" className="hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.6)' }}>Politique de confidentialité</a>
           </div>
         </div>
       </div>
