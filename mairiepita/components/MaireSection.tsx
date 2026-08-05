@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function MaireSection() {
   return (
     <section className="py-16 px-4" style={{ backgroundColor: '#f5f5f5' }}>
@@ -16,22 +18,17 @@ export default function MaireSection() {
 
             {/* Content row */}
             <div className="flex flex-col sm:flex-row gap-6">
-              {/* Photo placeholder */}
+              {/* Photo */}
               <div className="flex-shrink-0">
-                <div
-                  className="w-32 h-40 rounded-lg flex flex-col items-center justify-center"
-                  style={{ backgroundColor: '#e0e0e0' }}
-                >
-                  {/* Silhouette */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-16 w-16"
-                    viewBox="0 0 24 24"
-                    fill="#9e9e9e"
-                  >
-                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-                  </svg>
-                  <span className="text-xs text-gray-500 mt-1">Le Maire</span>
+                <div className="w-32 h-40 rounded-lg overflow-hidden" style={{ backgroundColor: '#e0e0e0' }}>
+                  <Image
+                    src="/maire.jpg"
+                    alt="Le Maire de Pita"
+                    width={128}
+                    height={160}
+                    className="w-full h-full object-cover object-top"
+                    onError={() => {}}
+                  />
                 </div>
               </div>
 

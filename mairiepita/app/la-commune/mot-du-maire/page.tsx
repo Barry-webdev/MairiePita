@@ -1,6 +1,7 @@
 import TopBar from '@/components/TopBar';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Image from 'next/image';
 
 export const metadata = { title: 'Mot du Maire — Mairie de Pita' };
 
@@ -26,11 +27,14 @@ export default function MotDuMairePage() {
             <div className="flex flex-col md:flex-row gap-8">
               {/* Photo */}
               <div className="flex-shrink-0 flex flex-col items-center gap-3">
-                <div className="w-40 h-52 rounded-xl flex items-end justify-center overflow-hidden" style={{ backgroundColor: '#e5e7eb' }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-32 h-40" viewBox="0 0 100 120" fill="none">
-                    <ellipse cx="50" cy="38" rx="22" ry="24" fill="#9ca3af" />
-                    <ellipse cx="50" cy="105" rx="40" ry="30" fill="#9ca3af" />
-                  </svg>
+                <div className="w-40 h-52 rounded-xl overflow-hidden" style={{ backgroundColor: '#e5e7eb' }}>
+                  <Image
+                    src="/maire.jpg"
+                    alt="Le Maire de Pita"
+                    width={160}
+                    height={208}
+                    className="w-full h-full object-cover object-top"
+                  />
                 </div>
                 <div className="text-center">
                   <p className="font-black text-sm" style={{ color: '#1a5c2a' }}>Le Maire</p>

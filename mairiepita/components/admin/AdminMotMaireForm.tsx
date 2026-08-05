@@ -150,28 +150,65 @@ export default function AdminMotMaireForm() {
           <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
             Photo du Maire
           </label>
+
+          {/* Photo actuelle */}
+          <div className="flex flex-col sm:flex-row gap-6 mb-5">
+            <div className="flex-shrink-0">
+              <p className="text-xs text-gray-500 mb-2 font-semibold">Photo actuelle :</p>
+              <div className="w-28 h-36 rounded-lg overflow-hidden border-2 border-green-200" style={{ backgroundColor: '#e5e7eb' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/maire.jpg"
+                  alt="Photo du Maire"
+                  className="w-full h-full object-cover object-top"
+                  onError={(e) => {
+                    const target = e.currentTarget as HTMLImageElement;
+                    target.style.display = 'none';
+                    const parent = target.parentElement;
+                    if (parent) {
+                      parent.innerHTML = '<div class="w-full h-full flex flex-col items-center justify-center gap-1"><svg xmlns=\'http://www.w3.org/2000/svg\' class=\'h-10 w-10\' viewBox=\'0 0 24 24\' fill=\'#9ca3af\'><path d=\'M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z\'/></svg><span style=\'font-size:10px;color:#9ca3af\'>Aucune photo</span></div>';
+                    }
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 flex-1">
+              <div className="p-4 rounded-lg border border-blue-100 bg-blue-50">
+                <p className="text-sm font-bold text-blue-800 mb-2 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  Comment changer la photo ?
+                </p>
+                <ol className="text-xs text-blue-700 flex flex-col gap-1.5 list-decimal list-inside">
+                  <li>Préparez la photo au format <strong>JPG ou PNG</strong></li>
+                  <li>Renommez le fichier exactement : <strong>maire.jpg</strong></li>
+                  <li>Copiez-le dans le dossier : <strong>public/</strong> du projet</li>
+                  <li>La photo s&apos;affichera automatiquement sur tout le site</li>
+                </ol>
+              </div>
+              <div className="p-3 rounded-lg border border-gray-100 bg-gray-50 text-xs text-gray-500">
+                <p>📁 Chemin exact :</p>
+                <code className="text-green-700 font-mono text-xs break-all">mairiepita/public/maire.jpg</code>
+              </div>
+              <p className="text-xs text-gray-400">
+                💡 Format recommandé : portrait, minimum 400×500px, fond neutre.
+              </p>
+            </div>
+          </div>
+
+          {/* Upload zone (futur backend) */}
           <div
-            className={`border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center gap-3 transition-colors cursor-pointer bg-gray-50 ${
-              dragOver ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-green-500'
+            className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center gap-3 transition-colors cursor-not-allowed bg-gray-50 ${
+              dragOver ? 'border-green-500 bg-green-50' : 'border-gray-200'
             }`}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onDrop={(e) => { e.preventDefault(); setDragOver(false); }}
           >
-            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-            <div className="text-center">
-              <p className="text-sm font-medium text-gray-500">Glissez la photo ici</p>
-              <p className="text-xs text-gray-400 mt-1">ou <span className="text-green-600 font-semibold">parcourir les fichiers</span></p>
-            </div>
-            <p className="text-xs text-gray-400">PNG, JPG, WEBP — max 5 MB</p>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            <p className="text-sm text-gray-400 text-center">Upload direct disponible après connexion au backend</p>
           </div>
-          <p className="text-xs text-gray-400 mt-2">
-            💡 Fonctionnalité disponible après connexion à la base de données.
-          </p>
         </div>
 
       </div>
