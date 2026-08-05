@@ -44,6 +44,9 @@ export default function AdminDashboardPage() {
           { label: 'Nouvel article', href: '/admin/actualites/new', icon: '✍️', desc: 'Rédiger et publier une actualité' },
           { label: 'Voir les actualités', href: '/admin/actualites', icon: '📋', desc: 'Gérer tous les articles' },
           { label: 'Voir le site', href: '/', icon: '🌐', desc: 'Accéder au portail public', external: true },
+          { label: 'Mot du Maire', href: '/admin/mot-du-maire', icon: '👤', desc: 'Modifier le message du Maire' },
+          { label: "Page d'accueil", href: '/admin/accueil', icon: '🏠', desc: "Paramètres de la page d'accueil" },
+          { label: 'Utilisateurs', href: '/admin/utilisateurs', icon: '👥', desc: 'Gérer les comptes administrateurs' },
         ].map((action) => (
           <a
             key={action.label}
