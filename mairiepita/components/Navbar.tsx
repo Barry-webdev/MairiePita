@@ -29,10 +29,10 @@ const navLinks = [
     href: '#',
     dropdown: [
       { label: 'État civil', href: '/services/etat-civil' },
-      { label: 'Urbanisme', href: '#' },
-      { label: 'Recette communale', href: '#' },
-      { label: 'Déchets et salubrité', href: '#' },
-      { label: 'Eau et assainissement', href: '#' },
+      { label: 'Urbanisme', href: '/services/urbanisme' },
+      { label: 'Recette communale', href: '/services/recette-communale' },
+      { label: 'Déchets et salubrité', href: '/services/dechets-salubrite' },
+      { label: 'Eau et assainissement', href: '/services/eau-assainissement' },
     ],
   },
   {
