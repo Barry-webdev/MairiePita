@@ -1,5 +1,19 @@
 import Image from 'next/image';
 
+function MairePhoto() {
+  return (
+    <div className="w-32 h-40 rounded-lg overflow-hidden relative" style={{ backgroundColor: '#e0e0e0' }}>
+      <Image
+        src="/maire.jpg"
+        alt="Le Maire de Pita"
+        fill
+        className="object-cover object-top"
+        sizes="128px"
+      />
+    </div>
+  );
+}
+
 export default function MaireSection() {
   return (
     <section className="py-16 px-4" style={{ backgroundColor: '#f5f5f5' }}>
@@ -20,16 +34,7 @@ export default function MaireSection() {
             <div className="flex flex-col sm:flex-row gap-6">
               {/* Photo */}
               <div className="flex-shrink-0">
-                <div className="w-32 h-40 rounded-lg overflow-hidden" style={{ backgroundColor: '#e0e0e0' }}>
-                  <Image
-                    src="/maire.jpg"
-                    alt="Le Maire de Pita"
-                    width={128}
-                    height={160}
-                    className="w-full h-full object-cover object-top"
-                    onError={() => {}}
-                  />
-                </div>
+                <MairePhoto />
               </div>
 
               {/* Text */}
