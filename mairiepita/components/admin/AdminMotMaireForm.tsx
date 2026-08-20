@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motMaireService, type MotMaire } from '@/lib/api/motMaire.service';
 
 type FormData = {
   nom: string;
@@ -24,27 +25,82 @@ export default function AdminMotMaireForm() {
     messageComplet: '',
     signature: 'Le Maire',
   });
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [dragOver, setDragOver] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    loadMotMaire();
+  }, []);
+
+  async function loadMotMaire() {
+    try {
+      setLoading(true);
+      const data = await motMaireService.get();
+      
+      if (data) {
+        setForm({
+          nom: data.nom || '',
+          titre: data.titre || 'Maire de la Commune Urbaine de Pita',
+          email: data.email || '',
+          telephone: data.telephone || '',
+          mandat: data.mandat || '2022 — 2027',
+          messageCourt: data.messageCourt || '',
+          messageComplet: data.messageComplet || '',
+          signature: data.signature || 'Le Maire',
+        });
+      }
+    } catch (err: any) {
+      console.error('Erreur chargement:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   function handleChange(field: keyof FormData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
     setSaved(false);
+    setError('');
   }
 
   async function handleSave(e: React.MouseEvent) {
     e.preventDefault();
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setSaving(false);
-    setSaved(true);
+    setError('');
+
+    try {
+      await motMaireService.createOrUpdate(form);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err: any) {
+      setError(err.message || 'Une erreur est survenue');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700 mx-auto mb-4"></div>
+          <p className="text-gray-500">Chargement...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
       {/* Main content */}
       <div className="flex-1 flex flex-col gap-6">
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p className="text-red-700 text-sm">❌ {error}</p>
+          </div>
+        )}
 
         {/* Identité */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -194,21 +250,6 @@ export default function AdminMotMaireForm() {
               </p>
             </div>
           </div>
-
-          {/* Upload zone (futur backend) */}
-          <div
-            className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center gap-3 transition-colors cursor-not-allowed bg-gray-50 ${
-              dragOver ? 'border-green-500 bg-green-50' : 'border-gray-200'
-            }`}
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={(e) => { e.preventDefault(); setDragOver(false); }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-            </svg>
-            <p className="text-sm text-gray-400 text-center">Upload direct disponible après connexion au backend</p>
-          </div>
         </div>
 
       </div>
@@ -234,14 +275,6 @@ export default function AdminMotMaireForm() {
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="w-full py-2.5 text-sm font-semibold rounded-lg border-2 border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition-colors disabled:opacity-50"
-            >
-              {saving ? 'Enregistrement...' : 'Enregistrer'}
-            </button>
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={saving}
               className="w-full py-2.5 text-sm font-bold rounded-lg text-white transition-all hover:brightness-110 disabled:opacity-50"
               style={{ backgroundColor: '#1a5c2a' }}
             >
@@ -251,10 +284,10 @@ export default function AdminMotMaireForm() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Publication...
+                  Enregistrement...
                 </span>
               ) : (
-                'Publier les modifications'
+                'Enregistrer les modifications'
               )}
             </button>
           </div>

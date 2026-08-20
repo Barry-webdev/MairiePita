@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { authService } from '@/lib/api/auth.service';
 
 export default function AdminLoginForm() {
   const [email, setEmail] = useState('');
@@ -14,15 +15,17 @@ export default function AdminLoginForm() {
     setError('');
     setLoading(true);
 
-    // Simulation — sera remplacé par NextAuth signIn()
-    await new Promise((r) => setTimeout(r, 1000));
-
-    if (email === 'admin@mairiepita.gov.gn' && password === 'admin123') {
-      window.location.href = '/admin/actualites';
-    } else {
-      setError('Email ou mot de passe incorrect.');
+    try {
+      // Appel à l'API backend
+      await authService.login({ email, password });
+      
+      // Redirection vers le tableau de bord admin après connexion réussie
+      window.location.href = '/admin';
+    } catch (err: any) {
+      setError(err.message || 'Erreur de connexion. Vérifiez vos identifiants.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
@@ -40,17 +43,17 @@ export default function AdminLoginForm() {
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        {/* Email */}
+        {/* email */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="email" className="text-sm font-semibold text-gray-700">
-            Adresse e-mail
+            Nom d'utilisateur
           </label>
           <input
             id="email"
-            type="email"
+            type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="admin@mairiepita.gov.gn"
+            placeholder="admin"
             required
             className="px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition-colors"
           />
@@ -116,11 +119,6 @@ export default function AdminLoginForm() {
           )}
         </button>
       </form>
-
-      {/* Hint for demo */}
-      <div className="mt-5 p-3 rounded-lg bg-green-50 border border-green-100 text-xs text-green-700">
-        <strong>Démo :</strong> admin@mairiepita.gov.gn / admin123
-      </div>
     </div>
   );
 }

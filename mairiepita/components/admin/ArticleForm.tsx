@@ -1,55 +1,93 @@
 'use client';
 
 import { useState } from 'react';
+import { articlesService } from '@/lib/api/articles.service';
 import { CATEGORIES, CATEGORY_COLORS, type Article } from '@/lib/mockData';
 
 type FormData = {
   title: string;
+  slug: string;
   category: string;
   excerpt: string;
   content: string;
   author: string;
-  date: string;
   published: boolean;
 };
 
 interface ArticleFormProps {
   initialData?: Partial<Article>;
   mode: 'create' | 'edit';
+  articleId?: string;
 }
 
-export default function ArticleForm({ initialData, mode }: ArticleFormProps) {
+export default function ArticleForm({ initialData, mode, articleId }: ArticleFormProps) {
   const [form, setForm] = useState<FormData>({
     title: initialData?.title || '',
+    slug: initialData?.slug || '',
     category: initialData?.category || '',
     excerpt: initialData?.excerpt || '',
     content: initialData?.content || '',
-    author: initialData?.author || '',
-    date: initialData?.date || new Date().toISOString().split('T')[0],
+    author: initialData?.author || 'Service Communication',
     published: initialData?.published ?? false,
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState('');
 
   function handleChange(field: keyof FormData, value: string | boolean) {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    setForm((prev) => {
+      const updated = { ...prev, [field]: value };
+      
+      // Auto-générer le slug depuis le titre
+      if (field === 'title' && mode === 'create') {
+        updated.slug = generateSlug(value as string);
+      }
+      
+      return updated;
+    });
     setSaved(false);
+  }
+
+  function generateSlug(title: string): string {
+    return title
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Enlever les accents
+      .replace(/[^a-z0-9\s-]/g, '') // Enlever les caractères spéciaux
+      .trim()
+      .replace(/\s+/g, '-') // Remplacer espaces par tirets
+      .replace(/-+/g, '-'); // Remplacer plusieurs tirets par un seul
   }
 
   async function handleSubmit(e: React.FormEvent, publish?: boolean) {
     e.preventDefault();
     setSaving(true);
-    if (publish !== undefined) {
-      setForm((prev) => ({ ...prev, published: publish }));
+    setError('');
+
+    try {
+      const articleData = {
+        ...form,
+        published: publish !== undefined ? publish : form.published,
+        categoryColor: CATEGORY_COLORS[form.category] || '#1a5c2a',
+        imageBg: CATEGORY_COLORS[form.category] || '#1a5c2a',
+      };
+
+      if (mode === 'create') {
+        await articlesService.create(articleData);
+      } else if (mode === 'edit' && articleId) {
+        await articlesService.update(articleId, articleData);
+      }
+
+      setSaved(true);
+      
+      // Redirection après succès
+      setTimeout(() => {
+        window.location.href = '/admin/actualites';
+      }, 1000);
+    } catch (err: any) {
+      setError(err.message || 'Une erreur est survenue');
+      setSaving(false);
     }
-    // Simulation — sera remplacé par un appel API
-    await new Promise((r) => setTimeout(r, 800));
-    setSaving(false);
-    setSaved(true);
-    // Redirect to list after save
-    setTimeout(() => {
-      window.location.href = '/admin/actualites';
-    }, 1000);
   }
 
   const selectedCategoryColor = CATEGORY_COLORS[form.category] || '#1a5c2a';
@@ -58,6 +96,12 @@ export default function ArticleForm({ initialData, mode }: ArticleFormProps) {
     <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-6">
       {/* Main content */}
       <div className="flex-1 flex flex-col gap-6">
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p className="text-red-700 text-sm">❌ {error}</p>
+          </div>
+        )}
 
         {/* Title */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -72,6 +116,11 @@ export default function ArticleForm({ initialData, mode }: ArticleFormProps) {
             required
             className="w-full px-4 py-3 text-base font-semibold text-gray-800 border border-gray-200 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition-colors"
           />
+          {form.slug && (
+            <p className="text-xs text-gray-400 mt-2">
+              URL : /actualites/<span className="font-mono text-green-700">{form.slug}</span>
+            </p>
+          )}
         </div>
 
         {/* Excerpt */}
@@ -148,7 +197,7 @@ export default function ArticleForm({ initialData, mode }: ArticleFormProps) {
             <p className="text-xs text-gray-400">PNG, JPG, WEBP — max 5 MB</p>
           </div>
           <p className="text-xs text-gray-400 mt-2">
-            💡 Fonctionnalité disponible après connexion à la base de données.
+            💡 Fonctionnalité d'upload d'image sera ajoutée prochainement.
           </p>
         </div>
 
@@ -174,7 +223,7 @@ export default function ArticleForm({ initialData, mode }: ArticleFormProps) {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              Enregistré avec succès
+              Enregistré avec succès !
             </div>
           )}
 
@@ -248,15 +297,6 @@ export default function ArticleForm({ initialData, mode }: ArticleFormProps) {
                 value={form.author}
                 onChange={(e) => handleChange('author', e.target.value)}
                 placeholder="Service Communication"
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition-colors"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Date de publication</label>
-              <input
-                type="date"
-                value={form.date}
-                onChange={(e) => handleChange('date', e.target.value)}
                 className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition-colors"
               />
             </div>

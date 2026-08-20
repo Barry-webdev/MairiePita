@@ -1,6 +1,5 @@
-import DocumentForm from '@/components/admin/DocumentForm';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { mockDocuments } from '@/lib/mockDocuments';
+import DocumentEditContent from '@/components/admin/DocumentEditContent';
 
 export const metadata = {
   title: 'Modifier un document — Administration Mairie de Pita',
@@ -12,24 +11,12 @@ interface Props {
 
 export default async function EditDocumentPage({ params }: Props) {
   const { id } = await params;
-  const doc = mockDocuments.find((d) => d.id === id);
-
-  if (!doc) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-        <p className="text-lg font-semibold">Document introuvable</p>
-        <a href="/admin/documents" className="mt-4 text-sm text-green-700 hover:underline">
-          Retour à la liste
-        </a>
-      </div>
-    );
-  }
 
   return (
     <>
       <AdminHeader
         title="Modifier le document"
-        subtitle={doc.title}
+        subtitle="Modifiez les informations de ce document"
         action={
           <a
             href="/admin/documents"
@@ -42,7 +29,7 @@ export default async function EditDocumentPage({ params }: Props) {
           </a>
         }
       />
-      <DocumentForm mode="edit" initialData={doc} />
+      <DocumentEditContent documentId={id} />
     </>
   );
 }

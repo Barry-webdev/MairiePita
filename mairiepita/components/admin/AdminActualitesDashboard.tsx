@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { mockArticles, CATEGORIES, type Article } from '@/lib/mockData';
+import { useState, useEffect } from 'react';
+import { articlesService, type Article } from '@/lib/api/articles.service';
+import { CATEGORIES } from '@/lib/mockData';
 import AdminHeader from './AdminHeader';
 
 function formatDate(dateStr: string) {
@@ -13,11 +14,29 @@ function formatDate(dateStr: string) {
 }
 
 export default function AdminActualitesDashboard() {
-  const [articles, setArticles] = useState<Article[]>(mockArticles);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    loadArticles();
+  }, []);
+
+  async function loadArticles() {
+    try {
+      setLoading(true);
+      const data = await articlesService.getAll();
+      setArticles(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const filtered = articles.filter((a) => {
     const matchSearch = search
@@ -33,21 +52,62 @@ export default function AdminActualitesDashboard() {
     return matchSearch && matchCat && matchStatus;
   });
 
-  function togglePublish(id: string) {
-    setArticles((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, published: !a.published } : a))
-    );
+  async function togglePublish(id: string) {
+    try {
+      const article = articles.find((a) => a.id === id);
+      if (!article) return;
+
+      await articlesService.update(id, { published: !article.published });
+      
+      // Mettre à jour localement
+      setArticles((prev) =>
+        prev.map((a) => (a.id === id ? { ...a, published: !a.published } : a))
+      );
+    } catch (err: any) {
+      alert('Erreur lors de la mise à jour : ' + err.message);
+    }
   }
 
   function confirmDelete(id: string) {
     setDeleteTarget(id);
   }
 
-  function executeDelete() {
-    if (deleteTarget) {
+  async function executeDelete() {
+    if (!deleteTarget) return;
+
+    try {
+      await articlesService.delete(deleteTarget);
       setArticles((prev) => prev.filter((a) => a.id !== deleteTarget));
       setDeleteTarget(null);
+    } catch (err: any) {
+      alert('Erreur lors de la suppression : ' + err.message);
+      setDeleteTarget(null);
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700 mx-auto mb-4"></div>
+          <p className="text-gray-500">Chargement des articles...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <p className="text-red-700">❌ Erreur : {error}</p>
+        <button
+          onClick={loadArticles}
+          className="mt-2 text-sm text-red-700 underline hover:no-underline"
+        >
+          Réessayer
+        </button>
+      </div>
+    );
   }
 
   const publishedCount = articles.filter((a) => a.published).length;
@@ -161,10 +221,12 @@ export default function AdminActualitesDashboard() {
                       </span>
                     </td>
                     <td className="px-5 py-4 text-gray-500 text-xs hidden md:table-cell">{article.author}</td>
-                    <td className="px-5 py-4 text-gray-500 text-xs hidden lg:table-cell whitespace-nowrap">{formatDate(article.date)}</td>
+                    <td className="px-5 py-4 text-gray-500 text-xs hidden lg:table-cell whitespace-nowrap">
+                      {formatDate(article.createdAt || article._id?.toString() || new Date().toISOString())}
+                    </td>
                     <td className="px-5 py-4 text-center">
                       <button
-                        onClick={() => togglePublish(article.id)}
+                        onClick={() => togglePublish(article.id!)}
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
                           article.published
                             ? 'bg-green-100 text-green-700 hover:bg-green-200'
@@ -199,7 +261,7 @@ export default function AdminActualitesDashboard() {
                           </svg>
                         </a>
                         <button
-                          onClick={() => confirmDelete(article.id)}
+                          onClick={() => confirmDelete(article.id!)}
                           className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all"
                           title="Supprimer"
                         >

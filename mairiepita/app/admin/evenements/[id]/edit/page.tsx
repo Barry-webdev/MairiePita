@@ -1,6 +1,5 @@
-import EvenementForm from '@/components/admin/EvenementForm';
+import EventEditContent from '@/components/admin/EventEditContent';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { mockEvenements } from '@/lib/mockEvenements';
 
 export const metadata = {
   title: 'Modifier un événement — Administration Mairie de Pita',
@@ -10,26 +9,14 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-export default async function EditEvenementPage({ params }: Props) {
+export default async function EditEventPage({ params }: Props) {
   const { id } = await params;
-  const evt = mockEvenements.find((e) => e.id === id);
-
-  if (!evt) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-        <p className="text-lg font-semibold">Événement introuvable</p>
-        <a href="/admin/evenements" className="mt-4 text-sm text-green-700 hover:underline">
-          Retour à la liste
-        </a>
-      </div>
-    );
-  }
 
   return (
     <>
       <AdminHeader
         title="Modifier l'événement"
-        subtitle={evt.title}
+        subtitle="Modifiez les informations de cet événement"
         action={
           <a
             href="/admin/evenements"
@@ -42,7 +29,7 @@ export default async function EditEvenementPage({ params }: Props) {
           </a>
         }
       />
-      <EvenementForm mode="edit" initialData={evt} />
+      <EventEditContent eventId={id} />
     </>
   );
 }

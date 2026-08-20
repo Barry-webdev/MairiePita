@@ -1,16 +1,16 @@
-import EvenementForm from '@/components/admin/EvenementForm';
+import EventForm from '@/components/admin/EvenementForm';
 import AdminHeader from '@/components/admin/AdminHeader';
 
 export const metadata = {
   title: 'Nouvel événement — Administration Mairie de Pita',
 };
 
-export default function NewEvenementPage() {
+export default function NewEventPage() {
   return (
     <>
       <AdminHeader
         title="Nouvel événement"
-        subtitle="Créez et publiez un nouvel événement"
+        subtitle="Créez un nouvel événement communal"
         action={
           <a
             href="/admin/evenements"
@@ -23,7 +23,7 @@ export default function NewEvenementPage() {
           </a>
         }
       />
-      <EvenementForm mode="create" />
+      <EventForm mode="create" />
     </>
   );
 }

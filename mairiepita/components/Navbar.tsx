@@ -1,230 +1,322 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-
-const navLinks = [
-  { label: 'Accueil', href: '/', active: true },
-  {
-    label: 'La Commune',
-    href: '/la-commune',
-    dropdown: [
-      { label: 'Présentation', href: '/la-commune' },
-      { label: 'Géographie', href: '/la-commune/geographie' },
-      { label: 'Histoire', href: '/la-commune/histoire' },
-      { label: "Mot du Maire", href: '/la-commune/mot-du-maire' },
-    ],
-  },
-  {
-    label: 'Conseil Communal',
-    href: '/conseil-communal',
-    dropdown: [
-      { label: 'Composition', href: '/conseil-communal' },
-      { label: 'Délibérations', href: '/conseil-communal/deliberations' },
-      { label: 'Séances', href: '/conseil-communal/seances' },
-    ],
-  },
-  { label: 'Actualités', href: '/actualites' },
-  {
-    label: 'Services',
-    href: '#',
-    dropdown: [
-      { label: 'État civil', href: '/services/etat-civil' },
-      { label: 'Urbanisme', href: '/services/urbanisme' },
-      { label: 'Recette communale', href: '/services/recette-communale' },
-      { label: 'Déchets et salubrité', href: '/services/dechets-salubrite' },
-      { label: 'Eau et assainissement', href: '/services/eau-assainissement' },
-    ],
-  },
-  {
-    label: 'Transparence',
-    href: '#',
-    dropdown: [
-      { label: 'Budget communal', href: '/transparence/budget' },
-      { label: 'Marchés publics', href: '/appels-offres' },
-      { label: 'Rapports annuels', href: '/documents' },
-    ],
-  },
-  { label: 'Contact', href: '/contact' },
-];
+import { useState } from 'react';
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const [laCommune, setLaCommune] = useState(false);
+  const [conseilOpen, setConseilOpen] = useState(false);
 
   return (
-    <nav
-      className={`w-full z-50 bg-white transition-shadow duration-300 ${
-        isScrolled ? 'sticky top-0 shadow-md' : ''
-      }`}
-    >
+    <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3 flex-shrink-0">
-            {/* Shield logo */}
-            <div
-              className="flex items-center justify-center w-12 h-14 rounded-t-full text-white font-bold text-lg flex-shrink-0"
-              style={{ backgroundColor: '#1a5c2a', clipPath: 'polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%)' }}
-            >
-              MP
+          <a href="/" className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#1a5c2a] rounded-full flex items-center justify-center">
+              <span className="text-white font-black text-lg">P</span>
             </div>
             <div className="hidden sm:block">
-              <div
-                className="text-sm font-black uppercase tracking-widest leading-none"
-                style={{ color: '#1a5c2a' }}
-              >
+              <div className="text-sm font-black text-gray-800 leading-tight uppercase">
                 Mairie de Pita
               </div>
-              <div className="text-xs text-gray-500 italic mt-0.5">
-                Travail · Solidarité · Développement
-              </div>
+              <div className="text-xs text-gray-500">Commune Urbaine</div>
             </div>
           </a>
 
-          {/* Desktop nav links */}
+          {/* Desktop Menu */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <div
-                key={link.label}
-                className="relative group"
-                onMouseEnter={() => link.dropdown && setOpenDropdown(link.label)}
-                onMouseLeave={() => setOpenDropdown(null)}
-              >
-                <a
-                  href={link.href}
-                  className={`flex items-center gap-1 px-3 py-2 text-sm font-semibold transition-colors rounded ${
-                    link.active
-                      ? 'border-b-2 border-[#1a5c2a] text-[#1a5c2a]'
-                      : 'text-gray-700 hover:text-[#1a5c2a]'
-                  }`}
-                  style={{ color: link.active ? '#1a5c2a' : undefined }}
-                >
-                  {link.label}
-                  {link.dropdown && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-3 w-3 mt-0.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  )}
-                </a>
-
-                {/* Dropdown */}
-                {link.dropdown && openDropdown === link.label && (
-                  <div className="absolute top-full left-0 w-52 bg-white shadow-lg border-t-2 border-[#1a5c2a] z-50 py-1">
-                    {link.dropdown.map((item) => (
-                      <a
-                        key={item.label}
-                        href={item.href}
-                        className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-[#1a5c2a] transition-colors"
-                      >
-                        {item.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Right: search + mobile toggle */}
-          <div className="flex items-center gap-2">
-            <button
-              className="hidden lg:flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100 transition-colors"
-              style={{ color: '#1a5c2a' }}
-              aria-label="Rechercher"
+            <a
+              href="/"
+              className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#1a5c2a] hover:bg-gray-50 rounded transition-colors"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
+              Accueil
+            </a>
 
-            {/* Mobile toggle */}
-            <button
-              className="lg:hidden flex items-center justify-center w-10 h-10 rounded transition-colors hover:bg-gray-100"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Menu"
-              style={{ color: '#1a5c2a' }}
-            >
-              {mobileOpen ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
-          {navLinks.map((link) => (
-            <div key={link.label}>
+            {/* La Commune (dropdown) */}
+            <div className="relative">
               <button
-                className={`w-full flex items-center justify-between px-6 py-3 text-sm font-semibold border-b border-gray-100 ${
-                  link.active ? 'text-[#1a5c2a] bg-green-50' : 'text-gray-700'
-                }`}
-                onClick={() =>
-                  link.dropdown
-                    ? setOpenDropdown(openDropdown === link.label ? null : link.label)
-                    : setMobileOpen(false)
-                }
+                onMouseEnter={() => setLaCommune(true)}
+                onMouseLeave={() => setLaCommune(false)}
+                className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#1a5c2a] hover:bg-gray-50 rounded transition-colors flex items-center gap-1"
               >
-                {link.label}
-                {link.dropdown && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`h-4 w-4 transition-transform ${openDropdown === link.label ? 'rotate-180' : ''}`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                )}
+                La Commune
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
               </button>
-              {link.dropdown && openDropdown === link.label && (
-                <div className="bg-gray-50">
-                  {link.dropdown.map((item) => (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                      className="block px-10 py-2.5 text-sm text-gray-600 hover:text-[#1a5c2a] border-b border-gray-100"
-                    >
-                      {item.label}
-                    </a>
-                  ))}
+              {laCommune && (
+                <div
+                  onMouseEnter={() => setLaCommune(true)}
+                  onMouseLeave={() => setLaCommune(false)}
+                  className="absolute left-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg py-2"
+                >
+                  <a
+                    href="/la-commune/mot-du-maire"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a]"
+                  >
+                    Mot du Maire
+                  </a>
+                  <a
+                    href="/la-commune/histoire"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a]"
+                  >
+                    Histoire
+                  </a>
+                  <a
+                    href="/la-commune/geographie"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a]"
+                  >
+                    Géographie
+                  </a>
+                  <a
+                    href="/la-commune/galerie"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a]"
+                  >
+                    Galerie Photo
+                  </a>
+                  <a
+                    href="/la-commune/archives"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a]"
+                  >
+                    Archives
+                  </a>
+                  <a
+                    href="/la-commune/archives"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a]"
+                  >
+                    Rapport
+                  </a>
+
                 </div>
               )}
             </div>
-          ))}
+
+            {/* Conseil Communal (dropdown) */}
+            <div className="relative">
+              <button
+                onMouseEnter={() => setConseilOpen(true)}
+                onMouseLeave={() => setConseilOpen(false)}
+                className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#1a5c2a] hover:bg-gray-50 rounded transition-colors flex items-center gap-1"
+              >
+                Conseil Communal
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {conseilOpen && (
+                <div
+                  onMouseEnter={() => setConseilOpen(true)}
+                  onMouseLeave={() => setConseilOpen(false)}
+                  className="absolute left-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg py-2"
+                >
+                  <a
+                    href="/conseil-communal"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a]"
+                  >
+                    Présentation
+                  </a>
+                  <a
+                    href="/conseil-communal/seances"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a]"
+                  >
+                    Séances
+                  </a>
+                  <a
+                    href="/conseil-communal/deliberations"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a]"
+                  >
+                    Délibérations
+                  </a>
+                </div>
+              )}
+            </div>
+
+            <a
+              href="/actualites"
+              className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#1a5c2a] hover:bg-gray-50 rounded transition-colors"
+            >
+              Actualités
+            </a>
+            <a
+              href="/evenements"
+              className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#1a5c2a] hover:bg-gray-50 rounded transition-colors"
+            >
+              Événements
+            </a>
+            <a
+              href="/services"
+              className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#1a5c2a] hover:bg-gray-50 rounded transition-colors"
+            >
+              Services
+            </a>
+            <a
+              href="/documents"
+              className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#1a5c2a] hover:bg-gray-50 rounded transition-colors"
+            >
+              Documents
+            </a>
+            <a
+              href="/appels-offres"
+              className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#1a5c2a] hover:bg-gray-50 rounded transition-colors"
+            >
+              Appels d'offres
+            </a>
+            <a
+              href="/contact"
+              className="ml-2 px-5 py-2 text-sm font-bold text-white rounded-lg transition-all hover:shadow-md"
+              style={{ backgroundColor: '#1a5c2a' }}
+            >
+              Contact
+            </a>
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              {mobileOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
         </div>
-      )}
+
+        {/* Mobile Menu */}
+        {mobileOpen && (
+          <div className="lg:hidden pb-4 border-t border-gray-200 mt-2">
+            <a
+              href="/"
+              className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+            >
+              Accueil
+            </a>
+            <div className="px-4 py-2 text-sm font-bold text-gray-500 uppercase text-xs">
+              La Commune
+            </div>
+              <a
+                href="/la-commune/mot-du-maire"
+                className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+              >
+                Mot du Maire
+              </a>
+              <a
+                href="/la-commune/histoire"
+                className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+              >
+                Histoire
+              </a>
+              <a
+                href="/la-commune/geographie"
+                className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+              >
+                Géographie
+              </a>
+              <a
+                href="/la-commune/galerie"
+                className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+              >
+                Galerie Photo
+              </a>
+              <a
+                href="/la-commune/archives"
+                className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+              >
+                Archives
+              </a>
+              <a
+                href="/la-commune/archives"
+                className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+              >
+                Rapport
+              </a>
+
+            <div className="px-4 py-2 text-sm font-bold text-gray-500 uppercase text-xs mt-2">
+              Conseil Communal
+            </div>
+            <a
+              href="/conseil-communal"
+              className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+            >
+              Présentation
+            </a>
+            <a
+              href="/conseil-communal/seances"
+              className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+            >
+              Séances
+            </a>
+            <a
+              href="/conseil-communal/deliberations"
+              className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+            >
+              Délibérations
+            </a>
+            <a
+              href="/actualites"
+              className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded mt-2"
+            >
+              Actualités
+            </a>
+            <a
+              href="/evenements"
+              className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+            >
+              Événements
+            </a>
+            <a
+              href="/services"
+              className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+            >
+              Services
+            </a>
+            <a
+              href="/documents"
+              className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+            >
+              Documents
+            </a>
+            <a
+              href="/appels-offres"
+              className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#1a5c2a] rounded"
+            >
+              Appels d'offres
+            </a>
+            <a
+              href="/contact"
+              className="block px-4 py-2 mt-2 text-sm font-bold text-white rounded-lg"
+              style={{ backgroundColor: '#1a5c2a' }}
+            >
+              Contact
+            </a>
+          </div>
+        )}
+      </div>
     </nav>
   );
 }

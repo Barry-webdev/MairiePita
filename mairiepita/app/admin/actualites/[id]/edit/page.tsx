@@ -1,6 +1,5 @@
-import ArticleForm from '@/components/admin/ArticleForm';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { mockArticles } from '@/lib/mockData';
+import ArticleEditContent from '@/components/admin/ArticlEditContent';
 
 export const metadata = {
   title: 'Modifier un article — Administration Mairie de Pita',
@@ -12,24 +11,12 @@ interface Props {
 
 export default async function EditArticlePage({ params }: Props) {
   const { id } = await params;
-  const article = mockArticles.find((a) => a.id === id);
-
-  if (!article) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-        <p className="text-lg font-semibold">Article introuvable</p>
-        <a href="/admin/actualites" className="mt-4 text-sm text-green-700 hover:underline">
-          Retour à la liste
-        </a>
-      </div>
-    );
-  }
 
   return (
     <>
       <AdminHeader
         title="Modifier l'article"
-        subtitle={article.title}
+        subtitle="Modifiez les informations de cet article"
         action={
           <a
             href="/admin/actualites"
@@ -42,7 +29,7 @@ export default async function EditArticlePage({ params }: Props) {
           </a>
         }
       />
-      <ArticleForm mode="edit" initialData={article} />
+      <ArticleEditContent articleId={id} />
     </>
   );
 }

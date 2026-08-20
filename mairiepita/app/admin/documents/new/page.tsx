@@ -10,7 +10,7 @@ export default function NewDocumentPage() {
     <>
       <AdminHeader
         title="Nouveau document"
-        subtitle="Ajoutez et publiez un nouveau document"
+        subtitle="Ajoutez un nouveau document administratif"
         action={
           <a
             href="/admin/documents"

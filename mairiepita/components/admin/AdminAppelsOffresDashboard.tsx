@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { mockAppelsOffres, APPEL_CATEGORIES, STATUS_COLORS, type AppelOffre } from '@/lib/mockAppelsOffres';
+import { useState, useEffect } from 'react';
+import { appelsOffresService, type AppelOffre } from '@/lib/api/appelsOffres.service';
 import AdminHeader from './AdminHeader';
 
 function formatDate(dateStr: string) {
@@ -12,45 +12,111 @@ function formatDate(dateStr: string) {
   });
 }
 
-type StatusFilter = '' | 'Ouvert' | 'Clôturé' | 'Attribué' | 'Annulé';
+const STATUS_COLORS: Record<string, string> = {
+  Ouvert: '#16a34a',
+  Fermé: '#dc2626',
+  'En cours': '#2563eb',
+  Attribué: '#6b7280',
+};
 
 export default function AdminAppelsOffresDashboard() {
-  const [appels, setAppels] = useState<AppelOffre[]>(mockAppelsOffres);
+  const [appelsOffres, setAppelsOffres] = useState<AppelOffre[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [filterCategory, setFilterCategory] = useState('');
-  const [filterStatus, setFilterStatus] = useState<StatusFilter>('');
+  const [filterStatus, setFilterStatus] = useState('');
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [error, setError] = useState('');
 
-  const filtered = appels.filter((a) => {
+  useEffect(() => {
+    loadAppelsOffres();
+  }, []);
+
+  async function loadAppelsOffres() {
+    try {
+      setLoading(true);
+      const data = await appelsOffresService.getAll();
+      setAppelsOffres(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const filtered = appelsOffres.filter((ao) => {
     const matchSearch = search
-      ? a.title.toLowerCase().includes(search.toLowerCase()) ||
-        a.reference.toLowerCase().includes(search.toLowerCase())
+      ? ao.title.toLowerCase().includes(search.toLowerCase()) ||
+        ao.reference.toLowerCase().includes(search.toLowerCase())
       : true;
-    const matchCat = filterCategory ? a.category === filterCategory : true;
-    const matchStatus = filterStatus ? a.status === filterStatus : true;
-    return matchSearch && matchCat && matchStatus;
+    const matchStatus = filterStatus ? ao.status === filterStatus : true;
+    return matchSearch && matchStatus;
   });
+
+  async function togglePublish(id: string) {
+    try {
+      const appelOffre = appelsOffres.find((ao) => ao.id === id);
+      if (!appelOffre) return;
+
+      await appelsOffresService.update(id, { published: !appelOffre.published });
+      
+      setAppelsOffres((prev) =>
+        prev.map((ao) => (ao.id === id ? { ...ao, published: !ao.published } : ao))
+      );
+    } catch (err: any) {
+      alert('Erreur lors de la mise à jour : ' + err.message);
+    }
+  }
 
   function confirmDelete(id: string) {
     setDeleteTarget(id);
   }
 
-  function executeDelete() {
-    if (deleteTarget) {
-      setAppels((prev) => prev.filter((a) => a.id !== deleteTarget));
+  async function executeDelete() {
+    if (!deleteTarget) return;
+
+    try {
+      await appelsOffresService.delete(deleteTarget);
+      setAppelsOffres((prev) => prev.filter((ao) => ao.id !== deleteTarget));
+      setDeleteTarget(null);
+    } catch (err: any) {
+      alert('Erreur lors de la suppression : ' + err.message);
       setDeleteTarget(null);
     }
   }
 
-  const ouvertCount = appels.filter((a) => a.status === 'Ouvert').length;
-  const clotureCount = appels.filter((a) => a.status === 'Clôturé').length;
-  const attribueCount = appels.filter((a) => a.status === 'Attribué').length;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700 mx-auto mb-4"></div>
+          <p className="text-gray-500">Chargement des appels d'offres...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <p className="text-red-700">❌ Erreur : {error}</p>
+        <button
+          onClick={loadAppelsOffres}
+          className="mt-2 text-sm text-red-700 underline hover:no-underline"
+        >
+          Réessayer
+        </button>
+      </div>
+    );
+  }
+
+  const publishedCount = appelsOffres.filter((ao) => ao.published).length;
+  const openCount = appelsOffres.filter((ao) => ao.status === 'Ouvert').length;
 
   return (
     <>
       <AdminHeader
-        title="Appels d'Offres"
-        subtitle={`${appels.length} appels au total — ${ouvertCount} ouverts, ${clotureCount} clôturés, ${attribueCount} attribués`}
+        title="Gestion des Appels d'offres"
+        subtitle={`${appelsOffres.length} appels d'offres au total — ${publishedCount} publiés, ${openCount} ouverts`}
         action={
           <a
             href="/admin/appels-offres/new"
@@ -68,10 +134,10 @@ export default function AdminAppelsOffresDashboard() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Total', value: appels.length, color: '#1a5c2a', icon: '📋' },
-          { label: 'Ouverts', value: ouvertCount, color: STATUS_COLORS['Ouvert'].text, icon: '🟢' },
-          { label: 'Clôturés', value: clotureCount, color: STATUS_COLORS['Clôturé'].text, icon: '🔴' },
-          { label: 'Attribués', value: attribueCount, color: STATUS_COLORS['Attribué'].text, icon: '🔵' },
+          { label: 'Total', value: appelsOffres.length, color: '#1a5c2a', icon: '📢' },
+          { label: 'Publiés', value: publishedCount, color: '#2d7a3a', icon: '✅' },
+          { label: 'Ouverts', value: openCount, color: '#16a34a', icon: '🟢' },
+          { label: 'Fermés', value: appelsOffres.filter((ao) => ao.status === 'Fermé').length, color: '#dc2626', icon: '🔴' },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-center gap-4">
             <span className="text-2xl">{stat.icon}</span>
@@ -98,24 +164,15 @@ export default function AdminAppelsOffresDashboard() {
           />
         </div>
         <select
-          value={filterCategory}
-          onChange={(e) => setFilterCategory(e.target.value)}
-          className="px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
-        >
-          {APPEL_CATEGORIES.map((c) => (
-            <option key={c.value} value={c.value}>{c.label || 'Toutes catégories'}</option>
-          ))}
-        </select>
-        <select
           value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value as StatusFilter)}
+          onChange={(e) => setFilterStatus(e.target.value)}
           className="px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
         >
           <option value="">Tous les statuts</option>
-          <option value="Ouvert">Ouvert</option>
-          <option value="Clôturé">Clôturé</option>
-          <option value="Attribué">Attribué</option>
-          <option value="Annulé">Annulé</option>
+          <option value="Ouvert">Ouverts</option>
+          <option value="Fermé">Fermés</option>
+          <option value="En cours">En cours</option>
+          <option value="Attribué">Attribués</option>
         </select>
       </div>
 
@@ -125,55 +182,57 @@ export default function AdminAppelsOffresDashboard() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100" style={{ backgroundColor: '#f9fafb' }}>
-                <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider">Référence</th>
                 <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider">Titre</th>
-                <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden sm:table-cell">Catégorie</th>
-                <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden md:table-cell">Budget</th>
-                <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden lg:table-cell">Date limite</th>
+                <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden sm:table-cell">Référence</th>
+                <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden md:table-cell">Date limite</th>
                 <th className="text-center px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider">Statut</th>
+                <th className="text-center px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider">Publié</th>
                 <th className="text-right px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-5 py-12 text-center text-gray-400 text-sm">
-                    Aucun appel d&apos;offres trouvé.
+                  <td colSpan={6} className="px-5 py-12 text-center text-gray-400 text-sm">
+                    Aucun appel d'offres trouvé.
                   </td>
                 </tr>
               ) : (
-                filtered.map((appel) => (
-                  <tr key={appel.id} className="hover:bg-gray-50 transition-colors">
+                filtered.map((ao) => (
+                  <tr key={ao.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-5 py-4">
-                      <span className="font-mono text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded whitespace-nowrap">
-                        {appel.reference}
-                      </span>
+                      <p className="font-semibold text-gray-800 line-clamp-1 max-w-xs">{ao.title}</p>
+                      <p className="text-xs text-gray-400 mt-0.5 line-clamp-1 hidden sm:block">{ao.description}</p>
                     </td>
-                    <td className="px-5 py-4">
-                      <p className="font-semibold text-gray-800 line-clamp-1 max-w-xs">{appel.title}</p>
+                    <td className="px-5 py-4 text-gray-500 text-xs hidden sm:table-cell font-mono">{ao.reference}</td>
+                    <td className="px-5 py-4 text-gray-500 text-xs hidden md:table-cell whitespace-nowrap">
+                      {formatDate(ao.deadline)}
                     </td>
-                    <td className="px-5 py-4 hidden sm:table-cell">
-                      <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
-                        {appel.category}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4 text-gray-600 text-xs hidden md:table-cell whitespace-nowrap">{appel.budget}</td>
-                    <td className="px-5 py-4 text-gray-500 text-xs hidden lg:table-cell whitespace-nowrap">{formatDate(appel.dateLimite)}</td>
                     <td className="px-5 py-4 text-center">
                       <span
-                        className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
-                        style={{
-                          backgroundColor: STATUS_COLORS[appel.status]?.bg || '#f3f4f6',
-                          color: STATUS_COLORS[appel.status]?.text || '#6b7280',
-                        }}
+                        className="px-2.5 py-1 text-xs font-bold rounded-full text-white"
+                        style={{ backgroundColor: STATUS_COLORS[ao.status] || '#6b7280' }}
                       >
-                        {appel.status}
+                        {ao.status}
                       </span>
+                    </td>
+                    <td className="px-5 py-4 text-center">
+                      <button
+                        onClick={() => togglePublish(ao.id!)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                          ao.published
+                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                            : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                        }`}
+                      >
+                        <span className={`w-1.5 h-1.5 rounded-full ${ao.published ? 'bg-green-500' : 'bg-orange-500'}`} />
+                        {ao.published ? 'Oui' : 'Non'}
+                      </button>
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <a
-                          href={`/admin/appels-offres/${appel.id}/edit`}
+                          href={`/admin/appels-offres/${ao.id}/edit`}
                           className="p-1.5 rounded-lg text-gray-400 hover:text-green-700 hover:bg-green-50 transition-all"
                           title="Modifier"
                         >
@@ -182,7 +241,7 @@ export default function AdminAppelsOffresDashboard() {
                           </svg>
                         </a>
                         <button
-                          onClick={() => confirmDelete(appel.id)}
+                          onClick={() => confirmDelete(ao.id!)}
                           className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all"
                           title="Supprimer"
                         >
@@ -200,7 +259,7 @@ export default function AdminAppelsOffresDashboard() {
         </div>
       </div>
 
-      {/* Delete confirmation modal */}
+      {/* Delete modal */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
           <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full">
@@ -209,7 +268,7 @@ export default function AdminAppelsOffresDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
               </svg>
             </div>
-            <h3 className="text-base font-bold text-center text-gray-800 mb-2">Supprimer cet appel d&apos;offres ?</h3>
+            <h3 className="text-base font-bold text-center text-gray-800 mb-2">Supprimer cet appel d'offres ?</h3>
             <p className="text-sm text-center text-gray-500 mb-6">Cette action est irréversible.</p>
             <div className="flex gap-3">
               <button

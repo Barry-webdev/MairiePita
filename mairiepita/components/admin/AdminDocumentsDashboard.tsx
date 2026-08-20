@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { mockDocuments, DOCUMENT_CATEGORIES, type Document } from '@/lib/mockDocuments';
+import { useState, useEffect } from 'react';
+import { documentsService, type Document } from '@/lib/api/documents.service';
+import { DOCUMENT_CATEGORIES } from '@/lib/mockDocuments';
 import AdminHeader from './AdminHeader';
 
 function formatDate(dateStr: string) {
@@ -20,10 +21,28 @@ const FILE_TYPE_COLORS: Record<string, string> = {
 };
 
 export default function AdminDocumentsDashboard() {
-  const [documents, setDocuments] = useState<Document[]>(mockDocuments);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    loadDocuments();
+  }, []);
+
+  async function loadDocuments() {
+    try {
+      setLoading(true);
+      const data = await documentsService.getAll();
+      setDocuments(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const filtered = documents.filter((d) => {
     const matchSearch = search
@@ -33,21 +52,61 @@ export default function AdminDocumentsDashboard() {
     return matchSearch && matchCat;
   });
 
-  function togglePublish(id: string) {
-    setDocuments((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, published: !d.published } : d))
-    );
+  async function togglePublish(id: string) {
+    try {
+      const document = documents.find((d) => d.id === id);
+      if (!document) return;
+
+      await documentsService.update(id, { published: !document.published });
+      
+      setDocuments((prev) =>
+        prev.map((d) => (d.id === id ? { ...d, published: !d.published } : d))
+      );
+    } catch (err: any) {
+      alert('Erreur lors de la mise à jour : ' + err.message);
+    }
   }
 
   function confirmDelete(id: string) {
     setDeleteTarget(id);
   }
 
-  function executeDelete() {
-    if (deleteTarget) {
+  async function executeDelete() {
+    if (!deleteTarget) return;
+
+    try {
+      await documentsService.delete(deleteTarget);
       setDocuments((prev) => prev.filter((d) => d.id !== deleteTarget));
       setDeleteTarget(null);
+    } catch (err: any) {
+      alert('Erreur lors de la suppression : ' + err.message);
+      setDeleteTarget(null);
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700 mx-auto mb-4"></div>
+          <p className="text-gray-500">Chargement des documents...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <p className="text-red-700">❌ Erreur : {error}</p>
+        <button
+          onClick={loadDocuments}
+          className="mt-2 text-sm text-red-700 underline hover:no-underline"
+        >
+          Réessayer
+        </button>
+      </div>
+    );
   }
 
   const publishedCount = documents.filter((d) => d.published).length;
@@ -162,10 +221,12 @@ export default function AdminDocumentsDashboard() {
                       </span>
                     </td>
                     <td className="px-5 py-4 text-gray-500 text-xs hidden lg:table-cell whitespace-nowrap">{doc.fileSize}</td>
-                    <td className="px-5 py-4 text-gray-500 text-xs hidden lg:table-cell whitespace-nowrap">{formatDate(doc.date)}</td>
+                    <td className="px-5 py-4 text-gray-500 text-xs hidden lg:table-cell whitespace-nowrap">
+                      {formatDate(doc.createdAt || doc.date || new Date().toISOString())}
+                    </td>
                     <td className="px-5 py-4 text-center">
                       <button
-                        onClick={() => togglePublish(doc.id)}
+                        onClick={() => togglePublish(doc.id!)}
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
                           doc.published
                             ? 'bg-green-100 text-green-700 hover:bg-green-200'
@@ -189,7 +250,7 @@ export default function AdminDocumentsDashboard() {
                           </svg>
                         </a>
                         <button
-                          onClick={() => confirmDelete(doc.id)}
+                          onClick={() => confirmDelete(doc.id!)}
                           className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all"
                           title="Supprimer"
                         >
