@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motMaireService, type MotMaire } from '@/lib/api/motMaire.service';
+import { motMaireService } from '@/lib/api/motMaire.service';
 
 type FormData = {
   nom: string;
@@ -29,6 +29,10 @@ export default function AdminMotMaireForm() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
+  const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [archiving, setArchiving] = useState(false);
+  const [archiveSuccess, setArchiveSuccess] = useState('');
+  const [imageKey, setImageKey] = useState(Date.now()); // Pour forcer le rechargement de l'image
 
   useEffect(() => {
     loadMotMaire();
@@ -80,6 +84,54 @@ export default function AdminMotMaireForm() {
     }
   }
 
+  async function handleArchiveAndReset() {
+    try {
+      setArchiving(true);
+      setError('');
+      setArchiveSuccess('');
+      
+      const result = await motMaireService.archiveAndReset();
+      
+      // Fermer le modal
+      setShowArchiveModal(false);
+      
+      // Afficher le message de succès du backend
+      setArchiveSuccess(
+        '✅ ' + (result.message || 'Maire archivé avec succès !') + 
+        ' N\'oubliez pas de remplacer la photo maire.jpg dans le dossier public/ pour le nouveau maire.'
+      );
+      
+      // Vider le formulaire
+      setForm({
+        nom: '',
+        titre: 'Maire de la Commune Urbaine de Pita',
+        email: '',
+        telephone: '',
+        mandat: '2022 — 2027',
+        messageCourt: '',
+        messageComplet: '',
+        signature: 'Le Maire',
+      });
+      
+      // Forcer le rechargement de l'image
+      setImageKey(Date.now());
+      
+      // Recharger les données après 3 secondes
+      setTimeout(() => {
+        setArchiveSuccess('');
+        loadMotMaire();
+      }, 3000);
+      
+    } catch (error: any) {
+      console.error('Erreur archivage:', error);
+      setError(error.message || 'Erreur lors de l\'archivage');
+      setShowArchiveModal(false);
+    } finally {
+      setArchiving(false);
+    }
+  }
+
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -99,6 +151,12 @@ export default function AdminMotMaireForm() {
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <p className="text-red-700 text-sm">❌ {error}</p>
+          </div>
+        )}
+
+        {archiveSuccess && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <p className="text-green-700 text-sm">{archiveSuccess}</p>
           </div>
         )}
 
@@ -214,7 +272,8 @@ export default function AdminMotMaireForm() {
               <div className="w-28 h-36 rounded-lg overflow-hidden border-2 border-green-200" style={{ backgroundColor: '#e5e7eb' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/maire.jpg"
+                  key={imageKey}
+                  src={`/maire.jpg?t=${imageKey}`}
                   alt="Photo du Maire"
                   className="w-full h-full object-cover object-top"
                   onError={(e) => {
@@ -270,7 +329,8 @@ export default function AdminMotMaireForm() {
             </div>
           )}
 
-          <div className="flex flex-col gap-3">
+          {/* Boutons */}
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               type="button"
               onClick={handleSave}
@@ -278,18 +338,19 @@ export default function AdminMotMaireForm() {
               className="w-full py-2.5 text-sm font-bold rounded-lg text-white transition-all hover:brightness-110 disabled:opacity-50"
               style={{ backgroundColor: '#1a5c2a' }}
             >
-              {saving ? (
-                <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  Enregistrement...
-                </span>
-              ) : (
-                'Enregistrer les modifications'
-              )}
+              {loading ? 'Enregistrement...' : 'Enregistrer les modifications'}
             </button>
+            
+            {/* Bouton Archiver (seulement si un maire existe) */}
+            {form.nom && (
+              <button
+                type="button"
+                onClick={() => setShowArchiveModal(true)}
+                className="flex-1 px-6 py-3 text-sm font-bold bg-orange-600 text-white rounded-lg transition-all hover:bg-orange-700"
+              >
+                Archiver et changer de maire
+              </button>
+            )}
           </div>
         </div>
 
@@ -340,6 +401,43 @@ export default function AdminMotMaireForm() {
         </a>
 
       </div>
+      {/* Modal de confirmation archivage */}
+      {showArchiveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-100 mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
+            </div>
+            <h3 className="text-base font-bold text-center text-gray-800 mb-2">
+              Archiver le maire actuel ?
+            </h3>
+            <p className="text-sm text-center text-gray-600 mb-2">
+              Le maire actuel <strong>{form.nom}</strong> sera archivé avec toutes ses informations.
+            </p>
+            <p className="text-sm text-center text-gray-500 mb-6">
+              Le formulaire sera vidé pour que vous puissiez saisir le nouveau maire.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowArchiveModal(false)}
+                className="flex-1 py-2.5 text-sm font-semibold rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleArchiveAndReset}
+                disabled={archiving}
+                className="flex-1 py-2.5 text-sm font-semibold rounded-lg bg-orange-600 hover:bg-orange-700 transition-colors text-white disabled:opacity-50"
+              >
+                {archiving ? 'Archivage...' : 'Archiver'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

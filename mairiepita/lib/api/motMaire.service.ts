@@ -58,6 +58,40 @@ class MotMaireService {
     const result = await response.json();
     return result.motMaire || result;
   }
+
+  // Archiver le maire actuel et réinitialiser
+  async archiveAndReset(): Promise<{ message: string }> {
+    const token = authService.getToken();
+    if (!token) throw new Error('Non authentifié');
+
+    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.MOT_MAIRE}/archive`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'Erreur lors de l\'archivage';
+      try {
+        const error = await response.json();
+        errorMessage = error.message || errorMessage;
+      } catch (e) {
+        console.error('Erreur parsing response:', e);
+      }
+      throw new Error(errorMessage);
+    }
+
+    try {
+      const data = await response.json();
+      return data;
+    } catch (e) {
+      console.error('Erreur parsing success response:', e);
+      return { message: 'Archivage réussi' };
+    }
+  }
+
 }
 
 export const motMaireService = new MotMaireService();

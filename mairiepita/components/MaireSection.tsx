@@ -68,7 +68,7 @@ export default function MaireSection() {
 
       const articles = await articlesService.getAll({ published: true });
       if (articles.length > 0) {
-        setFeaturedArticle(articles[0]);
+        setFeaturedArticle(articles[0] as any);
       }
     } catch (err) {
       console.error('Erreur chargement:', err);

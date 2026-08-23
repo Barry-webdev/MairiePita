@@ -565,7 +565,7 @@ async function handleDelete() {
             <p className="text-sm text-center text-gray-500 mb-6">Cette action est irréversible.</p>
             <div className="flex gap-3">
               <button
-                onClick={() => closeDeleteConfirm(null)}
+                onClick={() => closeDeleteConfirm()}
                 className="flex-1 py-2.5 text-sm font-semibold rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Annuler
