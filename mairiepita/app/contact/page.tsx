@@ -95,7 +95,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-bold text-gray-800 text-sm mb-1">Téléphone</h3>
                   <a href="tel:+22412345679" className="text-sm text-gray-600 hover:text-green-700 transition-colors">
-                    +224 123 45 67 89
+                    +224 624 96 60 96
                   </a>
                 </div>
               </div>
@@ -113,7 +113,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-bold text-gray-800 text-sm mb-1">Email</h3>
                   <a href="mailto:contact@mairiepita.gov.gn" className="text-sm text-gray-600 hover:text-green-700 transition-colors">
-                    contact@mairiepita.gov.gn
+                    pitamairie@gmail.com
                   </a>
                 </div>
               </div>
@@ -153,7 +153,7 @@ export default function ContactPage() {
                 <div className="flex items-center gap-3">
                   {/* Facebook */}
                   <a
-                    href="#"
+                    href="https://www.facebook.com/share/1FF19ALucy/"
                     aria-label="Facebook"
                     className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all hover:brightness-110"
                     style={{ backgroundColor: '#1877f2' }}
