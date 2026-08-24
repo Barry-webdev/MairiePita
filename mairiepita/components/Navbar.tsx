@@ -13,7 +13,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <a href="/" className="flex items-center transition-all duration-300 hover:scale-105">
-            <div className="relative p-1 rounded-xl">
+            <div className="relative p-1 rounded-lg">
               <img 
                 src="/logo.jpeg" 
                 alt="Logo Mairie de Pita" 
