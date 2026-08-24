@@ -1,17 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { articlesService } from '@/lib/api/articles.service';
-
-interface Article {
-  _id: string;
-  title: string;
-  slug: string;
-  category: string;
-  excerpt?: string;
-  createdAt: string;
-  imageUrl?: string;
-}
+import { articlesService, Article } from '@/lib/api/articles.service';
 
 // Couleurs par catégorie
 const CATEGORY_COLORS: Record<string, { bg: string; badge: string }> = {
@@ -138,7 +128,7 @@ export default function ActualitesRecentes() {
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      {formatDate(article.createdAt)}
+                      {formatDate(article.createdAt || new Date().toISOString())}
                     </div>
                   </div>
                 </a>

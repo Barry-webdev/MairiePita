@@ -26,7 +26,7 @@ export default function DocumentForm({ initialData, mode, documentId }: Document
     category: initialData?.category || '',
     description: initialData?.description || '',
     fileType: initialData?.fileType || 'PDF',
-    fileUrl: initialData?.fileUrl || '',
+    fileUrl: (initialData as any)?.fileUrl || '',
     fileSize: initialData?.fileSize || '0 KB',
     published: initialData?.published ?? false,
   });

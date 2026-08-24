@@ -222,7 +222,7 @@ export default function AdminDocumentsDashboard() {
                     </td>
                     <td className="px-5 py-4 text-gray-500 text-xs hidden lg:table-cell whitespace-nowrap">{doc.fileSize}</td>
                     <td className="px-5 py-4 text-gray-500 text-xs hidden lg:table-cell whitespace-nowrap">
-                      {formatDate(doc.createdAt || doc.date || new Date().toISOString())}
+                      {formatDate(doc.createdAt || new Date().toISOString())}
                     </td>
                     <td className="px-5 py-4 text-center">
                       <button
