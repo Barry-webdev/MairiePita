@@ -12,15 +12,13 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#1a5c2a] rounded-full flex items-center justify-center">
-              <span className="text-white font-black text-lg">P</span>
-            </div>
-            <div className="hidden sm:block">
-              <div className="text-sm font-black text-gray-800 leading-tight uppercase">
-                Mairie de Pita
-              </div>
-              <div className="text-xs text-gray-500">Commune Urbaine</div>
+          <a href="/" className="flex items-center transition-all duration-300 hover:scale-105">
+            <div className="relative p-1 rounded-xl">
+              <img 
+                src="/logo.jpeg" 
+                alt="Logo Mairie de Pita" 
+                className="h-14 w-14 object-cover rounded-lg"
+              />
             </div>
           </a>
 
