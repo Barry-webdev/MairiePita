@@ -123,10 +123,15 @@ export default function AdminSidebar({ activePath }: AdminSidebarProps) {
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10">
         <div
-          className="flex-shrink-0 flex items-center justify-center w-9 h-11 text-white font-bold text-sm"
-          style={{ clipPath: 'polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%)', backgroundColor: 'rgba(255,255,255,0.2)' }}
+          className="flex-shrink-0 w-9 h-11 overflow-hidden"
+          style={{ clipPath: 'polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%)' }}
         >
-          MP
+          <img 
+            src="/logo.jpeg" 
+            alt="Logo Mairie Pita" 
+            className="w-full h-full object-cover"
+            style={{ mixBlendMode: 'multiply' }}
+          />
         </div>
         {!collapsed && (
           <div className="overflow-hidden">

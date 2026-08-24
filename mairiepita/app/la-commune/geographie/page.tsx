@@ -98,18 +98,17 @@ export default function GeographiePage() {
           {/* Map placeholder */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
             <h2 className="text-lg font-black uppercase tracking-wide mb-4" style={{ color: '#1a5c2a' }}>Carte de la commune</h2>
-            <div className="relative rounded-lg overflow-hidden h-64 flex items-center justify-center" style={{ backgroundColor: '#1a5c2a' }}>
-              <svg className="absolute inset-0 w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
-                <defs><pattern id="g" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" stroke="white" strokeWidth="0.5"/></pattern></defs>
-                <rect width="100%" height="100%" fill="url(#g)" />
-              </svg>
-              <div className="relative flex flex-col items-center gap-3 text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" style={{ color: '#d4a017' }} fill="currentColor" viewBox="0 0 24 24">
-                  <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-2.013 3.5-4.749 3.5-8.275C19.79 5.637 16.226 2 12 2S4.21 5.637 4.21 8.843c0 3.526 1.557 6.262 3.5 8.275a19.579 19.579 0 002.684 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
-                </svg>
-                <p className="font-black text-lg">PITA</p>
-                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>Fouta Djallon — Guinée</p>
-              </div>
+            <div className="rounded-lg overflow-hidden" style={{ height: '400px' }}>
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3915.604765751782!2d-12.39736052542164!3d11.068230053744438!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xefdcadf293b793d%3A0x5840122d9ed08354!2sPREFECTURE%20DE%20PITA!5e0!3m2!1sfr!2s!4v1787574318847!5m2!1sfr!2s" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Carte de la commune de Pita"
+              />
             </div>
           </div>
         </div>

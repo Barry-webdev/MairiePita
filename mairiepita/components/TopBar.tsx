@@ -6,7 +6,7 @@ export default function TopBar() {
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 w-full sm:w-auto">
           {/* Phone — toujours visible */}
           <a
-            href="tel:+22412345679"
+            href="tel:+224624966096"
             className="flex items-center gap-1 hover:text-yellow-300 transition-colors whitespace-nowrap"
           >
             <svg
@@ -23,12 +23,12 @@ export default function TopBar() {
                 d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
               />
             </svg>
-            +224 123 45 67 89
+            +224 624 96 60 96
           </a>
 
           {/* Email — masqué sur xs, visible à partir de md */}
           <a
-            href="mailto:contact@mairiepita.gov.gn"
+            href="mailto:pitamairie@gmail.com"
             className="hidden md:flex items-center gap-1 hover:text-yellow-300 transition-colors whitespace-nowrap"
           >
             <svg
@@ -45,7 +45,7 @@ export default function TopBar() {
                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
               />
             </svg>
-            contact@mairiepita.gov.gn
+            pitamairie@gmail.com
           </a>
 
           {/* Hours — masqué sur xs, visible à partir de sm */}
@@ -72,7 +72,7 @@ export default function TopBar() {
         <div className="flex items-center gap-3">
           {/* Facebook */}
           <a
-            href="#"
+            href="https://www.facebook.com/share/1FF19ALucy/"
             aria-label="Facebook"
             className="hover:text-yellow-300 transition-colors"
           >

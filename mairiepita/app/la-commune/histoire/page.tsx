@@ -8,7 +8,7 @@ const timeline = [
   { year: '1954', title: 'Création de la commune', desc: 'Création officielle de la commune de Pita sous l\'administration coloniale française.' },
   { year: '1958', title: 'Indépendance de la Guinée', desc: 'La Guinée accède à l\'indépendance. Pita devient une commune de la République de Guinée.' },
   { year: '1970', title: 'Développement des infrastructures', desc: 'Lancement des premiers grands projets d\'infrastructures locales : routes, écoles et centres de santé.' },
-  { year: '1984', title: 'Réorganisation administrative', desc: 'Réforme administrative nationale. Pita est confirmée comme commune urbaine de la région de Labé.' },
+  { year: '1984', title: 'Réorganisation administrative', desc: 'Réforme administrative nationale. Pita est confirmée comme commune urbaine de la région de Mamou.' },
   { year: '2000', title: 'Décentralisation', desc: 'Renforcement de l\'autonomie des communes. Mise en place d\'un conseil communal élu.' },
   { year: '2024', title: 'Modernisation numérique', desc: 'Lancement du portail web officiel et digitalisation des services administratifs.' },
 ];
@@ -63,12 +63,30 @@ export default function HistoirePage() {
             <h2 className="text-lg font-black uppercase tracking-wide mb-5" style={{ color: '#1a5c2a' }}>Patrimoine culturel</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {[
-                { icon: '🎭', title: 'Traditions Peulh', desc: 'La commune est le cœur de la culture Peulh, avec ses cérémonies, contes, musiques et danses traditionnelles transmises de génération en génération.' },
-                { icon: '🏠', title: 'Architecture traditionnelle', desc: 'L\'habitat traditionnel du Fouta Djallon, avec ses cases rondes et ses greniers, témoigne d\'un savoir-faire architectural ancestral.' },
-                { icon: '🧶', title: 'Artisanat local', desc: 'Tissage, poterie, maroquinerie et bijouterie : les artisans de Pita perpétuent des techniques séculaires reconnues dans toute la Guinée.' },
+                { 
+                  icon: <svg className="w-10 h-10 text-[#1a5c2a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                  </svg>, 
+                  title: 'Traditions Peulh', 
+                  desc: 'La commune est le cœur de la culture Peulh, avec ses cérémonies, contes, musiques et danses traditionnelles transmises de génération en génération.' 
+                },
+                { 
+                  icon: <svg className="w-10 h-10 text-[#1a5c2a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>, 
+                  title: 'Architecture traditionnelle', 
+                  desc: 'L\'habitat traditionnel du Fouta Djallon, avec ses cases rondes et ses greniers, témoigne d\'un savoir-faire architectural ancestral.' 
+                },
+                { 
+                  icon: <svg className="w-10 h-10 text-[#1a5c2a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>, 
+                  title: 'Artisanat local', 
+                  desc: 'Tissage, poterie, maroquinerie et bijouterie : les artisans de Pita perpétuent des techniques séculaires reconnues dans toute la Guinée.' 
+                },
               ].map((c) => (
                 <div key={c.title} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col gap-3">
-                  <span className="text-3xl">{c.icon}</span>
+                  {c.icon}
                   <h3 className="font-black text-sm uppercase tracking-wide" style={{ color: '#1a5c2a' }}>{c.title}</h3>
                   <p className="text-sm text-gray-600 leading-relaxed">{c.desc}</p>
                 </div>

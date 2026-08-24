@@ -14,7 +14,9 @@ export default function Footer() {
           {/* Col 1 — Localisation */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">📍</span>
+              <svg className="w-6 h-6 text-[#1a5c2a]" fill="currentColor" viewBox="0 0 24 24">
+                <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-2.013 3.5-4.749 3.5-8.275C19.79 5.637 16.226 2 12 2S4.21 5.637 4.21 8.843c0 3.526 1.557 6.262 3.5 8.275a19.579 19.579 0 002.684 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+              </svg>
               <h4 className="font-black uppercase text-sm tracking-widest" style={{ color: '#1a5c2a' }}>
                 Localisation
               </h4>
@@ -41,7 +43,9 @@ export default function Footer() {
           {/* Col 2 — Horaires */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">🕐</span>
+              <svg className="w-6 h-6 text-[#1a5c2a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
               <h4 className="font-black uppercase text-sm tracking-widest" style={{ color: '#1a5c2a' }}>
                 Horaires d'ouverture
               </h4>
@@ -65,7 +69,9 @@ export default function Footer() {
           {/* Col 3 — Nous contacter */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">📞</span>
+              <svg className="w-6 h-6 text-[#1a5c2a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
               <h4 className="font-black uppercase text-sm tracking-widest" style={{ color: '#1a5c2a' }}>
                 Nous Contacter
               </h4>
@@ -99,7 +105,9 @@ export default function Footer() {
           {/* Col 4 — Newsletter */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">✉️</span>
+              <svg className="w-6 h-6 text-[#1a5c2a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
               <h4 className="font-black uppercase text-sm tracking-widest" style={{ color: '#1a5c2a' }}>
                 Lettre d'Information
               </h4>
@@ -146,12 +154,14 @@ export default function Footer() {
               <div className="flex items-center gap-3">
                 <div
                   className="flex items-center justify-center w-12 h-14 text-white font-bold text-lg flex-shrink-0"
-                  style={{
-                    backgroundColor: 'rgba(255,255,255,0.15)',
-                    clipPath: 'polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%)',
-                  }}
-                >
-                  MP
+                  style={{ clipPath: 'polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%)' }}
+        >
+          <img 
+            src="/logo.jpeg" 
+            alt="Logo Mairie Pita" 
+            className="w-full h-full object-cover"
+            style={{ mixBlendMode: 'multiply' }}
+          />
                 </div>
                 <div>
                   <div className="font-black uppercase tracking-widest text-xs">Mairie de Pita</div>
@@ -166,7 +176,7 @@ export default function Footer() {
                 {[
                   { label: 'Facebook', path: 'M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z' },
                 ].map((s) => (
-                  <a key={s.label} href="#" aria-label={s.label} className="hover:text-yellow-300 transition-colors">
+                  <a key={s.label} href="https://www.facebook.com/share/1FF19ALucy/" aria-label={s.label} className="hover:text-yellow-300 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d={s.path} />
                     </svg>
@@ -259,31 +269,17 @@ export default function Footer() {
               <h5 className="font-black uppercase text-xs tracking-widest border-b border-white/20 pb-2">
                 Localisation
               </h5>
-              <div
-                className="relative rounded-lg overflow-hidden h-40 flex items-center justify-center"
-                style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
-              >
-                {/* Map grid pattern */}
-                <svg
-                  className="absolute inset-0 w-full h-full opacity-20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <pattern id="mapgrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="white" strokeWidth="0.5" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#mapgrid)" />
-                </svg>
-                {/* Location pin */}
-                <div className="relative flex flex-col items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" style={{ color: '#d4a017' }} fill="currentColor" viewBox="0 0 24 24">
-                    <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-2.013 3.5-4.749 3.5-8.275C19.79 5.637 16.226 2 12 2S4.21 5.637 4.21 8.843c0 3.526 1.557 6.262 3.5 8.275a19.579 19.579 0 002.684 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-xs font-bold tracking-wider text-center">
-                    PITA / MAMOU<br />GUINÉE
-                  </span>
-                </div>
+              <div className="rounded-lg overflow-hidden h-40">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3915.604765751782!2d-12.39736052542164!3d11.068230053744438!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xefdcadf293b793d%3A0x5840122d9ed08354!2sPREFECTURE%20DE%20PITA!5e0!3m2!1sfr!2s!4v1787574318847!5m2!1sfr!2s" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Localisation Mairie de Pita"
+                />
               </div>
             </div>
 

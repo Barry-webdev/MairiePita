@@ -134,10 +134,38 @@ export default function AdminAppelsOffresDashboard() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Total', value: appelsOffres.length, color: '#1a5c2a', icon: '📢' },
-          { label: 'Publiés', value: publishedCount, color: '#2d7a3a', icon: '✅' },
-          { label: 'Ouverts', value: openCount, color: '#16a34a', icon: '🟢' },
-          { label: 'Fermés', value: appelsOffres.filter((ao) => ao.status === 'Fermé').length, color: '#dc2626', icon: '🔴' },
+          { 
+            label: 'Total', 
+            value: appelsOffres.length, 
+            color: '#1a5c2a', 
+            icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+            </svg>
+          },
+          { 
+            label: 'Publiés', 
+            value: publishedCount, 
+            color: '#2d7a3a', 
+            icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          },
+          { 
+            label: 'Ouverts', 
+            value: openCount, 
+            color: '#16a34a', 
+            icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          },
+          { 
+            label: 'Fermés', 
+            value: appelsOffres.filter((ao) => ao.status === 'Fermé').length, 
+            color: '#dc2626', 
+            icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-center gap-4">
             <span className="text-2xl">{stat.icon}</span>

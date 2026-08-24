@@ -21,7 +21,9 @@ export default function DeliberationsPage() {
       </div>
       <section className="py-16 px-4" style={{ backgroundColor: '#f5f5f5' }}>
         <div className="max-w-2xl mx-auto text-center flex flex-col items-center gap-6">
-          <span className="text-6xl">📄</span>
+          <svg className="w-20 h-20 text-[#1a5c2a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
           <h2 className="text-xl font-black text-gray-800">Consulter les délibérations</h2>
           <p className="text-gray-600 leading-relaxed">Les délibérations du Conseil Communal sont disponibles dans la section Documents. Vous y trouverez les procès-verbaux et délibérations classés par session.</p>
           <a href="/documents" className="inline-flex items-center gap-2 px-8 py-3.5 text-sm font-bold text-white rounded-lg transition-all hover:brightness-110" style={{ backgroundColor: '#1a5c2a' }}>

@@ -121,10 +121,38 @@ export default function AdminEventsDashboard() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Total', value: events.length, color: '#1a5c2a', icon: '📅' },
-          { label: 'Publiés', value: publishedCount, color: '#2d7a3a', icon: '✅' },
-          { label: 'À venir', value: upcomingCount, color: '#1565c0', icon: '🔜' },
-          { label: 'Passés', value: events.length - upcomingCount, color: '#6b7280', icon: '✔️' },
+          { 
+            label: 'Total', 
+            value: events.length, 
+            color: '#1a5c2a', 
+            icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          },
+          { 
+            label: 'Publiés', 
+            value: publishedCount, 
+            color: '#2d7a3a', 
+            icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          },
+          { 
+            label: 'À venir', 
+            value: upcomingCount, 
+            color: '#1565c0', 
+            icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          },
+          { 
+            label: 'Passés', 
+            value: events.length - upcomingCount, 
+            color: '#6b7280', 
+            icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
+            </svg>
+          },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-center gap-4">
             <span className="text-2xl">{stat.icon}</span>

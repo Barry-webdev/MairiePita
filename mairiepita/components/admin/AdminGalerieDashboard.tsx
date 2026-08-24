@@ -150,7 +150,7 @@ export default function AdminGalerieDashboard() {
         fileInputRef.current.value = '';
       }
 
-      alert('✅ Média uploadé avec succès !');
+      alert('Média uploadé avec succès !');
       setShowUploadForm(false); // Fermer le formulaire après upload
       await loadMedias();
     } catch (error: any) {
@@ -168,7 +168,7 @@ export default function AdminGalerieDashboard() {
 
     try {
       await galleryService.update(selectedMedia._id, editForm);
-      alert('✅ Média modifié avec succès !');
+      alert('Média modifié avec succès !');
       setShowEditModal(false);
       setSelectedMedia(null);
       loadMedias();
@@ -191,7 +191,7 @@ export default function AdminGalerieDashboard() {
 
     try {
       await galleryService.delete(mediaToDelete._id);
-      alert('✅ Média supprimé avec succès !');
+      alert('Média supprimé avec succès !');
       setShowDeleteModal(false);
       setMediaToDelete(null);
       loadMedias();
@@ -356,8 +356,11 @@ export default function AdminGalerieDashboard() {
 
         {/* Message d'information pour les vidéos */}
         <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-          <p className="text-sm text-amber-800 mb-2">
-            <strong>💡 Recommandations pour les vidéos :</strong>
+          <p className="text-sm text-amber-800 mb-2 flex items-center gap-2">
+            <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fillRule="evenodd" clipRule="evenodd" />
+            </svg>
+            <strong>Recommandations pour les vidéos :</strong>
           </p>
           <ul className="text-xs text-amber-700 space-y-1 ml-4 list-disc">
             <li>Taille maximale : <strong>20MB</strong> (10MB recommandé)</li>
@@ -370,9 +373,18 @@ export default function AdminGalerieDashboard() {
         <button
           onClick={handleUpload}
           disabled={uploading || !uploadForm.titre.trim()}
-          className="w-full py-3 text-sm font-bold rounded-lg bg-green-600 text-white hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-3 text-sm font-bold rounded-lg bg-green-600 text-white hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          {uploading ? 'Upload en cours...' : '📤 Uploader le média'}
+          {uploading ? (
+            'Upload en cours...'
+          ) : (
+            <>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              Uploader le média
+            </>
+          )}
         </button>
 
         {uploading && (
